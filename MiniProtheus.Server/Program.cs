@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using MiniProtheus.Server.Data;
+using MiniProtheus.Server.Interfaces;
+using MiniProtheus.Server.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseInMemoryDatabase("MiniProtheusDb"));
+
+builder.Services.AddScoped<IProductService, ProductService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
