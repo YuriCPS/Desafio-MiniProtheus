@@ -1,24 +1,14 @@
-﻿<h1 id="tableLabel">Weather forecast</h1>
+<header class="bg-indigo-700 text-white shadow-md">
+  <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+    <h1 class="text-xl font-bold tracking-tight">MiniProtheus</h1>
+    <nav>
+      <a routerLink="/products" class="text-indigo-100 hover:text-white transition-colors">
+        Produtos
+      </a>
+    </nav>
+  </div>
+</header>
 
-<p>This component demonstrates fetching data from the server.</p>
-
-<p *ngIf="!forecasts"><em>Loading... Please refresh once the ASP.NET backend has started. See <a href="https://aka.ms/jspsintegrationangular">https://aka.ms/jspsintegrationangular</a> for more details.</em></p>
-
-<table *ngIf="forecasts">
-    <thead>
-        <tr>
-            <th>Date</th>
-            <th>Temp. (C)</th>
-            <th>Temp. (F)</th>
-            <th>Summary</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let forecast of forecasts">
-            <td>{{ forecast.date }}</td>
-            <td>{{ forecast.temperatureC }}</td>
-            <td>{{ forecast.temperatureF }}</td>
-            <td>{{ forecast.summary }}</td>
-        </tr>
-    </tbody>
-</table>
+<main class="max-w-7xl mx-auto px-4 py-8">
+  <router-outlet></router-outlet>
+</main>
