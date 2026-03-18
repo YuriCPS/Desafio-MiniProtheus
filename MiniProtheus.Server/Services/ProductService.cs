@@ -15,9 +15,19 @@ namespace MiniProtheus.Server.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<ProductResponseDto>> GetAllAsync()
+        public async Task<IEnumerable<ProductResponseDto>> GetAllAsync(string? search = null)
         {
-            var products = await _context.Products
+            var query = _context.Products.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                var term = search.ToLower();
+                query = query.Where(p =>
+                    p.Name.ToLower().Contains(term) ||
+                    p.SKU.ToLower().Contains(term));
+            }
+
+            var products = await query
                 .OrderByDescending(p => p.CreatedAt)
                 .ToListAsync();
 
