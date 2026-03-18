@@ -15,6 +15,7 @@ namespace MiniProtheus.Server.Data
             {
                 entity.HasKey(p => p.Id);
                 entity.HasIndex(p => p.SKU).IsUnique();
+                entity.HasIndex(p => p.Barcode).IsUnique();
                 entity.Property(p => p.Price).HasPrecision(18, 2);
             });
         }
