@@ -16,6 +16,10 @@ export class ProductListComponent implements OnInit, OnDestroy {
   error: string | null = null;
   searchTerm = '';
 
+  hoveredProduct: Product | null = null;
+  hoverPosition = { x: 0, y: 0 };
+  private hoverTimeout: ReturnType<typeof setTimeout> | null = null;
+
   private searchSubject = new Subject<string>();
   private searchSubscription!: Subscription;
 
@@ -75,5 +79,20 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
   onNew(): void {
     this.router.navigate(['/products/new']);
+  }
+
+  onRowMouseEnter(event: MouseEvent, product: Product): void {
+    this.hoverTimeout = setTimeout(() => {
+      this.hoveredProduct = product;
+      this.hoverPosition = { x: event.clientX, y: event.clientY };
+    }, 200);
+  }
+
+  onRowMouseLeave(): void {
+    if (this.hoverTimeout) {
+      clearTimeout(this.hoverTimeout);
+      this.hoverTimeout = null;
+    }
+    this.hoveredProduct = null;
   }
 }
