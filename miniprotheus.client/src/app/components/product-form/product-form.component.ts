@@ -96,9 +96,13 @@ export class ProductFormComponent implements OnInit {
     operation.subscribe({
       next: () => this.router.navigate(['/products']),
       error: (err) => {
-        this.error = this.isEditMode
-          ? 'Erro ao atualizar produto. Tente novamente.'
-          : 'Erro ao criar produto. Tente novamente.';
+        if (err.status === 409 && err.error?.message) {
+          this.error = err.error.message;
+        } else {
+          this.error = this.isEditMode
+            ? 'Erro ao atualizar produto. Tente novamente.'
+            : 'Erro ao criar produto. Tente novamente.';
+        }
         this.loading = false;
         console.error(err);
       }

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using MiniProtheus.Server.Data;
 using MiniProtheus.Server.DTOs;
+using MiniProtheus.Server.Exceptions;
 using MiniProtheus.Server.Interfaces;
 using MiniProtheus.Server.Models;
 
@@ -42,6 +43,8 @@ namespace MiniProtheus.Server.Services
 
         public async Task<ProductResponseDto> CreateAsync(CreateProductDto dto)
         {
+            await ValidateUniqueFieldsAsync(dto.SKU, dto.Barcode);
+
             var product = new Product
             {
                 SKU = dto.SKU,
@@ -65,6 +68,8 @@ namespace MiniProtheus.Server.Services
         {
             var product = await _context.Products.FindAsync(id);
             if (product is null) return null;
+
+            await ValidateUniqueFieldsAsync(dto.SKU, dto.Barcode, id);
 
             product.SKU = dto.SKU;
             product.Name = dto.Name;
@@ -90,6 +95,24 @@ namespace MiniProtheus.Server.Services
             await _context.SaveChangesAsync();
 
             return true;
+        }
+
+        private async Task ValidateUniqueFieldsAsync(string sku, string? barcode, int? excludeId = null)
+        {
+            var skuExists = await _context.Products
+                .AnyAsync(p => p.SKU == sku && (!excludeId.HasValue || p.Id != excludeId.Value));
+
+            if (skuExists)
+                throw new BusinessException("Já existe um produto com este SKU.");
+
+            if (!string.IsNullOrWhiteSpace(barcode))
+            {
+                var barcodeExists = await _context.Products
+                    .AnyAsync(p => p.Barcode == barcode && (!excludeId.HasValue || p.Id != excludeId.Value));
+
+                if (barcodeExists)
+                    throw new BusinessException("Já existe um produto com este código de barras.");
+            }
         }
 
         private static ProductResponseDto MapToResponseDto(Product product)

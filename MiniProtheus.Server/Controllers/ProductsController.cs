@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using MiniProtheus.Server.DTOs;
+using MiniProtheus.Server.Exceptions;
 using MiniProtheus.Server.Interfaces;
 
 namespace MiniProtheus.Server.Controllers
@@ -33,16 +34,30 @@ namespace MiniProtheus.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<ProductResponseDto>> Create(CreateProductDto dto)
         {
-            var product = await _productService.CreateAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id = product.Id }, product);
+            try
+            {
+                var product = await _productService.CreateAsync(dto);
+                return CreatedAtAction(nameof(GetById), new { id = product.Id }, product);
+            }
+            catch (BusinessException ex)
+            {
+                return Conflict(new { message = ex.Message });
+            }
         }
 
         [HttpPut("{id}")]
         public async Task<ActionResult<ProductResponseDto>> Update(int id, UpdateProductDto dto)
         {
-            var product = await _productService.UpdateAsync(id, dto);
-            if (product is null) return NotFound();
-            return Ok(product);
+            try
+            {
+                var product = await _productService.UpdateAsync(id, dto);
+                if (product is null) return NotFound();
+                return Ok(product);
+            }
+            catch (BusinessException ex)
+            {
+                return Conflict(new { message = ex.Message });
+            }
         }
 
         [HttpDelete("{id}")]
