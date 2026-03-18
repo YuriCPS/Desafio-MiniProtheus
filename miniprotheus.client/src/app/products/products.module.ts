@@ -4,6 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { ProductListComponent } from '../components/product-list/product-list.component';
 import { ProductFormComponent } from '../components/product-form/product-form.component';
+import { ProductHoverCardComponent } from '../components/product-hover-card/product-hover-card.component';
 
 const routes: Routes = [
   { path: '', component: ProductListComponent },
@@ -14,7 +15,8 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     ProductListComponent,
-    ProductFormComponent
+    ProductFormComponent,
+    ProductHoverCardComponent
   ],
   imports: [
     CommonModule,

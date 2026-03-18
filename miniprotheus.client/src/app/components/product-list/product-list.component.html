@@ -44,7 +44,10 @@
           </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
-          <tr *ngFor="let product of products" class="hover:bg-gray-50 transition-colors">
+          <tr *ngFor="let product of products"
+            class="hover:bg-gray-50 transition-colors"
+            (mouseenter)="onRowMouseEnter($event, product)"
+            (mouseleave)="onRowMouseLeave()">
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ product.sku }}</td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ product.name }}</td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ product.price | currency:'BRL' }}</td>
@@ -72,4 +75,11 @@
   <ng-template #loading>
     <div class="text-center py-12 text-gray-500">Carregando...</div>
   </ng-template>
+
+  <!-- Hover Card -->
+  <app-product-hover-card
+    *ngIf="hoveredProduct"
+    [product]="hoveredProduct"
+    [position]="hoverPosition">
+  </app-product-hover-card>
 </div>
